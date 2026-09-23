@@ -1,4 +1,4 @@
-## Изучите [README.md](./README-правка.md) файл и структуру проекта.
+## Изучите [README.md](./README.md) файл и структуру проекта.
 
 Новые сервисы проекта — **proxy-service** и **events-service** — написаны на **.NET 10 / ASP.NET Core**
 (C#, Minimal API). Монолит и сервис movies остались на Go в том виде, в каком их выделила команда:
@@ -74,9 +74,11 @@ Kafka в compose публикует второй listener `localhost:9093` дл�
 #### Решение
 
 Сервис: [`src/microservices/proxy`](src/microservices/proxy) — .NET 10 + [YARP](https://github.com/dotnet/yarp).
-Конфигурация запуска в `docker-compose.yml` использована без изменений (переменные `PORT`,
+Конфигурация запуска в `docker-compose.yml` использована как есть (переменные `PORT`,
 `MONOLITH_URL`, `MOVIES_SERVICE_URL`, `EVENTS_SERVICE_URL`, `GRADUAL_MIGRATION`,
-`MOVIES_MIGRATION_PERCENT`).
+`MOVIES_MIGRATION_PERCENT`); добавлены только политика перезапуска и возможность
+переопределить процент из shell (`MOVIES_MIGRATION_PERCENT=75 docker compose up -d proxy-service`,
+по умолчанию 50).
 
 Маршрутизация ([`RouteTable`](src/microservices/proxy/Infrastructure/Routing/RouteTable.cs)):
 

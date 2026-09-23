@@ -1,9 +1,10 @@
 <Solution>
   <Folder Name="/Solution Items/">
-    <File Path="&quot;README-\320\277\321\200\320\260\320\262\320\272\320\260.md&quot;" />
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
     <File Path="Project_template.md" />
+    <File Path="README-правка.md" />
+    <File Path="README.md" />
     <File Path="api-specification.yaml" />
     <File Path="docker-compose.yml" />
   </Folder>
