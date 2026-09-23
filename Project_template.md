@@ -243,6 +243,11 @@ cd tests/postman && npm run test:kubernetes
 
 #### Шаг 3
 
+Проверено на minikube: все 7 подов в статусе Running, Ingress направляет `/` в proxy-service и
+`/api/events` в events-service; `npm run test:kubernetes` — **22 запроса, 42 проверки, 0 ошибок**
+(health-чеки тоже проходят: `/health` отвечает сам proxy, а `/api/movies/health` при
+`MOVIES_MIGRATION_PERCENT=100` уходит в movies-service).
+
 Вывод https://cinemaabyss.example.com/api/movies:
 
 ![api/movies в Kubernetes](docs/screenshots/task3-k8s-movies.png)
@@ -271,7 +276,10 @@ cd tests/postman && npm run test:kubernetes
   `MOVIES_SERVICE_URL` (было `http://movies:8081` — такого Service нет, правильно
   `movies-service`), добавлены `EVENTS_SERVICE_URL` и `KAFKA_BROKERS`.
 
-`helm lint` проходит без ошибок, `helm template` рендерит все ресурсы.
+`helm lint` проходит без ошибок. Проверено на minikube: после удаления ручной установки
+`helm install` поднимает все 7 подов, `npm run test:kubernetes` — 42 проверки из 42;
+`helm upgrade --set config.moviesMigrationPercent=50` перезапускает proxy и делит трафик
+~50/50 (52 монолит / 47 movies-service).
 
 ```bash
 helm install cinemaabyss ./src/kubernetes/helm --namespace cinemaabyss --create-namespace
