@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+    <File Path="api-specification.yaml" />
+    <File Path="Project_template.md" />
+    <File Path="README-правка.md" />
+  </Folder>
+  <Folder Name="/docs/c4/">
+    <File Path="docs/c4/cinemaabyss-containers-to-be.puml" />
+  </Folder>
+  <Folder Name="/src/microservices/">
+    <Project Path="src/microservices/events/CinemaAbyss.Events.csproj" />
+    <Project Path="src/microservices/proxy/CinemaAbyss.Proxy.csproj" />
+  </Folder>
+</Solution>

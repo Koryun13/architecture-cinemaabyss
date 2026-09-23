@@ -4,8 +4,12 @@ global:
   domain: cinemaabyss.example.com
 
 # Image pull secrets
+# The images are public, so the secret carries no credentials: base64 of {"auths":{}}.
+# For private images pass a real one at install time instead of committing it:
+#   --set imagePullSecrets.dockerconfigjson=$(base64 -w0 ~/.docker/config.json)
 imagePullSecrets:
-  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewoJCQkiYXV0aCI6
+  dockerconfigjson: eyJhdXRocyI6e319
+
 # Database configuration
 database:
   host: postgres
@@ -33,7 +37,7 @@ database:
 monolith:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/monolith
+    repository: ghcr.io/koryun13/architecture-cinemaabyss/monolith
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -53,7 +57,7 @@ monolith:
 proxyService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/proxy-service
+    repository: ghcr.io/koryun13/architecture-cinemaabyss/proxy-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -73,7 +77,7 @@ proxyService:
 moviesService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/movies-service
+    repository: ghcr.io/koryun13/architecture-cinemaabyss/movies-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -93,7 +97,7 @@ moviesService:
 eventsService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/events-service
+    repository: ghcr.io/koryun13/architecture-cinemaabyss/events-service
     tag: latest
     pullPolicy: Always
   replicas: 1
@@ -163,8 +167,9 @@ zookeeper:
 ingress:
   enabled: true
   className: nginx
+  # className renders spec.ingressClassName; the deprecated kubernetes.io/ingress.class
+  # annotation must not be set as well, the API server rejects an Ingress with both.
   annotations:
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
   hosts:
     - host: cinemaabyss.example.com
@@ -180,6 +185,8 @@ ingress:
 
 # Application configuration
 config:
+  # Kafka bootstrap servers for the events service
+  kafkaBrokers: "kafka:9092"
   # Strangler Fig configuration
   gradualMigration: "true"
   moviesMigrationPercent: "100"

@@ -1,0 +1,9 @@
+# The build context is this folder; local build output must not reach the
+# image, otherwise obj/project.assets.json from the host breaks the restore.
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/*.user
+Dockerfile
+.dockerignore

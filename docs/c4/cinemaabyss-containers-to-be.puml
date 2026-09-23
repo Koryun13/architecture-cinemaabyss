@@ -1,0 +1,113 @@
+@startuml CinemaAbyss_Containers_ToBe
+!include <C4/C4_Container>
+
+LAYOUT_TOP_DOWN()
+' LAYOUT_WITH_LEGEND() is not used: SHOW_LEGEND() at the end keeps the legend compact.
+
+title Диаграмма контейнеров (C4, уровень 2) — «КиноБездна», To-Be
+
+Person(viewer, "Зритель", "Смотрит фильмы по единой подписке, оценивает их, собирает избранное.")
+Person(operator, "Оператор / контент-менеджер", "Ведёт каталог и метаданные фильмов.")
+
+System_Boundary(cinema, "Онлайн-кинотеатр «КиноБездна» (Kubernetes, namespace cinemaabyss)") {
+
+    Boundary(clients, "Клиентские приложения") {
+        Container(web, "Веб-приложение", "SPA", "Каталог, плеер, личный кабинет.")
+        Container(mobile, "Мобильное приложение", "iOS / Android", "Каталог и плеер для смартфонов и планшетов.")
+        Container(tv, "Приложение Smart TV", "Smart TV", "Упрощённый интерфейс для телевизоров.")
+    }
+
+    Boundary(edge, "Единая точка входа") {
+        Container(bffWeb, "BFF Web", "REST", "Агрегирует и формирует ответы под веб-интерфейс.")
+        Container(bffMobile, "BFF Mobile", "REST", "Укороченные ответы и пагинация под мобильные сети.")
+        Container(bffTv, "BFF Smart TV", "REST", "Минимальный набор данных под интерфейс ТВ.")
+        Container(gateway, "API Gateway (proxy-service)", ".NET 10, ASP.NET Core, YARP", "Единая точка вызова сервисов. Strangler Fig: маршрутизирует /api/movies между монолитом и movies-service по фиче-флагу GRADUAL_MIGRATION / MOVIES_MIGRATION_PERCENT; остальные запросы — в монолит, пока домен не выделен. Порт 8000.")
+    }
+
+    Boundary(legacy, "Переходный период") {
+        Container(monolith, "Монолит", "Go", "Исходная система. Отдаёт домены, которые ещё не выделены; по мере выделения сервисов маршруты уходят из него, и монолит выводится из эксплуатации.")
+        ContainerDb(monolithDb, "cinemaabyss (общая БД)", "PostgreSQL", "users, movies, payments, subscriptions, views, user_ratings — данные переносятся в БД сервисов по доменам.")
+    }
+
+    Boundary(domains, "Доменные микросервисы (база данных на сервис)") {
+        Container(users, "Пользователи и аутентификация", "Микросервис", "Регистрация, профили, вход, выпуск токенов.")
+        ContainerDb(usersDb, "users_db", "PostgreSQL", "users, credentials")
+
+        Container(movies, "Метаданные фильмов (movies-service)", "Go", "Фильмы, жанры, актёры, агрегированный рейтинг. Выделен из монолита первым. Порт 8081.")
+        ContainerDb(moviesDb, "movies_db", "PostgreSQL", "movies, movie_genres, actors")
+
+        Container(library, "Избранное и оценки", "Микросервис", "Папки избранного, оценки пользователей, история просмотров.")
+        ContainerDb(libraryDb, "library_db", "PostgreSQL", "favorites, user_ratings, views")
+
+        Container(video, "Видео и стриминг", "Микросервис", "Каталог видеофайлов, выдача ссылок на поток, агрегация контента внешних источников.")
+        ContainerDb(videoDb, "video_db", "PostgreSQL", "videos, sources")
+
+        Container(subscriptions, "Подписки и скидки", "Микросервис", "Тарифы, подписки, продление, скидки и промокоды.")
+        ContainerDb(subscriptionsDb, "subscriptions_db", "PostgreSQL", "subscriptions, plans, discounts")
+
+        Container(payments, "Платежи", "Микросервис", "Проведение и учёт платежей. Anti-Corruption Layer к платёжным системам.")
+        ContainerDb(paymentsDb, "payments_db", "PostgreSQL", "payments")
+
+        Container(partners, "Интеграции с партнёрами", "Микросервис", "Anti-Corruption Layer к сервисам лояльности и маркетплейсам.")
+
+        Container(recommendations, "Адаптер рекомендаций", "Микросервис", "Передаёт события во внешнюю рекомендательную систему и хранит готовые подборки.")
+    }
+
+    Boundary(eventing, "Асинхронное взаимодействие") {
+        Container(events, "Events service (events-service)", ".NET 10, ASP.NET Core, Confluent.Kafka", "MVP: принимает события User / Payment / Movie по REST, публикует их в Kafka и сам же читает, записывая обработку в лог. Порт 8082.")
+        ContainerQueue(kafka, "Шина событий", "Apache Kafka", "Топики movie-events, user-events, payment-events.")
+    }
+}
+
+System_Ext(paymentSystems, "Платёжные системы", "Эквайринг, кошельки")
+System_Ext(loyalty, "Сервисы лояльности и маркетплейсы", "Бонусные программы, партнёрские витрины")
+System_Ext(recommender, "Рекомендательная система", "Сторонний сервис подборок")
+System_Ext(contentSources, "Внешние источники контента и CDN", "Партнёрские стриминги, открытые источники, доставка видео")
+
+Rel(viewer, web, "Использует", "HTTPS")
+Rel(viewer, mobile, "Использует", "HTTPS")
+Rel(viewer, tv, "Использует", "HTTPS")
+Rel(operator, web, "Ведёт каталог", "HTTPS")
+
+Rel(web, bffWeb, "Вызывает API", "HTTPS/JSON")
+Rel(mobile, bffMobile, "Вызывает API", "HTTPS/JSON")
+Rel(tv, bffTv, "Вызывает API", "HTTPS/JSON")
+
+Rel(bffWeb, gateway, "Вызывает сервисы", "HTTP/REST")
+Rel(bffMobile, gateway, "Вызывает сервисы", "HTTP/REST")
+Rel(bffTv, gateway, "Вызывает сервисы", "HTTP/REST")
+
+Rel(gateway, monolith, "/api/movies (доля 100 − N %) и все ещё не выделенные домены", "HTTP/REST")
+Rel(gateway, movies, "/api/movies (доля N % по фиче-флагу)", "HTTP/REST")
+Rel(gateway, events, "/api/events", "HTTP/REST")
+Rel(gateway, users, "/api/users", "HTTP/REST")
+Rel(gateway, library, "/api/favorites, /api/ratings", "HTTP/REST")
+Rel(gateway, video, "/api/videos", "HTTP/REST")
+Rel(gateway, subscriptions, "/api/subscriptions", "HTTP/REST")
+Rel(gateway, payments, "/api/payments", "HTTP/REST")
+Rel(gateway, recommendations, "/api/recommendations", "HTTP/REST")
+
+Rel(monolith, monolithDb, "Читает/пишет", "SQL")
+Rel(users, usersDb, "Читает/пишет", "SQL")
+Rel(movies, moviesDb, "Читает/пишет", "SQL")
+Rel(library, libraryDb, "Читает/пишет", "SQL")
+Rel(video, videoDb, "Читает/пишет", "SQL")
+Rel(subscriptions, subscriptionsDb, "Читает/пишет", "SQL")
+Rel(payments, paymentsDb, "Читает/пишет", "SQL")
+
+Rel(events, kafka, "Публикует и читает события User / Payment / Movie", "Kafka protocol")
+Rel(users, kafka, "Публикует user-events (регистрация, вход)", "Kafka protocol")
+Rel(movies, kafka, "Публикует movie-events (добавлен, изменён); читает оценки", "Kafka protocol")
+Rel(library, kafka, "Публикует movie-events (просмотр, оценка)", "Kafka protocol")
+Rel(payments, kafka, "Публикует payment-events (успешен, отклонён)", "Kafka protocol")
+Rel(subscriptions, kafka, "Читает payment-events: продлевает подписку", "Kafka protocol")
+Rel(partners, kafka, "Читает payment-events, user-events: начисляет бонусы", "Kafka protocol")
+Rel(recommendations, kafka, "Читает movie-events, user-events", "Kafka protocol")
+
+Rel(payments, paymentSystems, "Проводит платежи", "HTTPS")
+Rel(partners, loyalty, "Синхронизирует бонусы и заказы", "HTTPS")
+Rel(recommendations, recommender, "Передаёт события, получает подборки", "HTTPS, асинхронно")
+Rel(video, contentSources, "Получает контент и ссылки на поток", "HTTPS")
+
+SHOW_LEGEND()
+@enduml
