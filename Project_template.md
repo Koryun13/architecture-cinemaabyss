@@ -17,6 +17,23 @@
 Решение открывается файлом `CinemaAbyss.slnx`; `dotnet build CinemaAbyss.slnx` собирает оба
 сервиса (предупреждения считаются ошибками).
 
+### Запуск из IDE (Rider)
+
+`CinemaAbyss.slnx` показывает весь репозиторий: .NET-проекты, исходники Go, Dockerfile,
+docker-compose, манифесты Kubernetes, Helm-чарт, workflow CI, Postman-тесты и документацию.
+Готовые конфигурации запуска лежат в `.run/` и вызывают скрипты из [`deploy/`](deploy)
+(их можно запускать и из терминала: `bash deploy/<скрипт>.sh`):
+
+| Группа | Конфигурации |
+|---|---|
+| Docker Compose | весь стек; только инфраструктура и Go-сервисы (для отладки proxy/events из IDE); `down -v`; смена процента миграции; проверка распределения трафика |
+| .NET services | `CinemaAbyss.Proxy: http`, `CinemaAbyss.Events: http`, оба сразу |
+| Tests | Postman: local, docker (как в CI), kubernetes, kubernetes внутри кластера (без hosts и tunnel) |
+| Kubernetes and Helm | применить манифесты, удалить всё, helm install/upgrade, helm с 50 %, minikube tunnel, распределение трафика |
+
+Для отладки из IDE: «docker-compose infrastructure + legacy», затем «proxy + events (local)».
+Kafka в compose публикует второй listener `localhost:9093` для сервисов, запущенных на хосте.
+
 # Задание 1
 
 1. Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.

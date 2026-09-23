@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="proxy + events (local)" type="CompoundRunConfigurationType" folderName="2. .NET services">
+    <toRun name="CinemaAbyss.Proxy: http" type="LaunchSettings" />
+    <toRun name="CinemaAbyss.Events: http" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -7,7 +7,7 @@
       "applicationUrl": "http://localhost:8082",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "KAFKA_BROKERS": "localhost:9092"
+        "KAFKA_BROKERS": "localhost:9093"
       }
     }
   }

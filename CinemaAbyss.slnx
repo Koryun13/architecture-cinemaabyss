@@ -1,15 +1,126 @@
 <Solution>
   <Folder Name="/Solution Items/">
-    <File Path="docker-compose.yml" />
-    <File Path="api-specification.yaml" />
+    <File Path="&quot;README-\320\277\321\200\320\260\320\262\320\272\320\260.md&quot;" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
     <File Path="Project_template.md" />
-    <File Path="README-правка.md" />
+    <File Path="api-specification.yaml" />
+    <File Path="docker-compose.yml" />
   </Folder>
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
+    <File Path=".github/workflows/api-tests.yml" />
+    <File Path=".github/workflows/docker-build-push.yml" />
+  </Folder>
+  <Folder Name="/.run/">
+    <File Path=".run/CinemaAbyss.Events http.run.xml" />
+    <File Path=".run/CinemaAbyss.Proxy http.run.xml" />
+    <File Path=".run/compose set movies migration percent.run.xml" />
+    <File Path=".run/compose traffic split.run.xml" />
+    <File Path=".run/docker-compose down -v.run.xml" />
+    <File Path=".run/docker-compose infrastructure + legacy.run.xml" />
+    <File Path=".run/docker-compose up.run.xml" />
+    <File Path=".run/helm install or upgrade.run.xml" />
+    <File Path=".run/helm movies migration 50.run.xml" />
+    <File Path=".run/k8s apply manifests.run.xml" />
+    <File Path=".run/k8s delete all.run.xml" />
+    <File Path=".run/k8s traffic split.run.xml" />
+    <File Path=".run/minikube tunnel.run.xml" />
+    <File Path=".run/proxy + events (local).run.xml" />
+    <File Path=".run/tests postman docker (as CI).run.xml" />
+    <File Path=".run/tests postman kubernetes (in-cluster).run.xml" />
+    <File Path=".run/tests postman kubernetes.run.xml" />
+    <File Path=".run/tests postman local.run.xml" />
+  </Folder>
+  <Folder Name="/deploy/">
+    <File Path="deploy/compose-down.sh" />
+    <File Path="deploy/compose-migration.sh" />
+    <File Path="deploy/helm-install.sh" />
+    <File Path="deploy/k8s-apply.sh" />
+    <File Path="deploy/k8s-delete.sh" />
+    <File Path="deploy/lib.sh" />
+    <File Path="deploy/minikube-tunnel.sh" />
+    <File Path="deploy/postman-tests-in-cluster.sh" />
+    <File Path="deploy/postman-tests.sh" />
+    <File Path="deploy/traffic-split.sh" />
+  </Folder>
+  <Folder Name="/docs/" />
   <Folder Name="/docs/c4/">
+    <File Path="docs/c4/CinemaAbyss_Containers_ToBe.png" />
+    <File Path="docs/c4/CinemaAbyss_Containers_ToBe.svg" />
     <File Path="docs/c4/cinemaabyss-containers-to-be.puml" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/database/">
+    <File Path="src/database/init.sql" />
+  </Folder>
+  <Folder Name="/src/kubernetes/">
+    <File Path="src/kubernetes/configmap.yaml" />
+    <File Path="src/kubernetes/dockerconfigsecret.yaml" />
+    <File Path="src/kubernetes/events-service.yaml" />
+    <File Path="src/kubernetes/ingress.yaml" />
+    <File Path="src/kubernetes/monolith.yaml" />
+    <File Path="src/kubernetes/movies-service.yaml" />
+    <File Path="src/kubernetes/namespace.yaml" />
+    <File Path="src/kubernetes/postgres-init-configmap.yaml" />
+    <File Path="src/kubernetes/postgres.yaml" />
+    <File Path="src/kubernetes/proxy-service.yaml" />
+    <File Path="src/kubernetes/secret.yaml" />
+  </Folder>
+  <Folder Name="/src/kubernetes/helm/">
+    <File Path="src/kubernetes/helm/.helmignore" />
+    <File Path="src/kubernetes/helm/Chart.yaml" />
+    <File Path="src/kubernetes/helm/README.md" />
+    <File Path="src/kubernetes/helm/values.yaml" />
+  </Folder>
+  <Folder Name="/src/kubernetes/helm/templates/">
+    <File Path="src/kubernetes/helm/templates/_helpers.tpl" />
+    <File Path="src/kubernetes/helm/templates/configmap.yaml" />
+    <File Path="src/kubernetes/helm/templates/dockerconfigsecret.yaml" />
+    <File Path="src/kubernetes/helm/templates/ingress.yaml" />
+    <File Path="src/kubernetes/helm/templates/namespace.yaml" />
+    <File Path="src/kubernetes/helm/templates/postgres-init-configmap.yaml" />
+    <File Path="src/kubernetes/helm/templates/secret.yaml" />
+  </Folder>
+  <Folder Name="/src/kubernetes/helm/templates/kafka/">
+    <File Path="src/kubernetes/helm/templates/kafka/kafka.yaml" />
+  </Folder>
+  <Folder Name="/src/kubernetes/helm/templates/services/">
+    <File Path="src/kubernetes/helm/templates/services/events-service.yaml" />
+    <File Path="src/kubernetes/helm/templates/services/monolith.yaml" />
+    <File Path="src/kubernetes/helm/templates/services/movies-service.yaml" />
+    <File Path="src/kubernetes/helm/templates/services/postgres.yaml" />
+    <File Path="src/kubernetes/helm/templates/services/proxy-service.yaml" />
+  </Folder>
+  <Folder Name="/src/kubernetes/kafka/">
+    <File Path="src/kubernetes/kafka/kafka.yaml" />
   </Folder>
   <Folder Name="/src/microservices/">
     <Project Path="src/microservices/events/CinemaAbyss.Events.csproj" />
     <Project Path="src/microservices/proxy/CinemaAbyss.Proxy.csproj" />
+  </Folder>
+  <Folder Name="/src/microservices/movies/">
+    <File Path="src/microservices/movies/Dockerfile" />
+    <File Path="src/microservices/movies/go.mod" />
+    <File Path="src/microservices/movies/go.sum" />
+    <File Path="src/microservices/movies/main.go" />
+  </Folder>
+  <Folder Name="/src/monolith/">
+    <File Path="src/monolith/Dockerfile" />
+    <File Path="src/monolith/go.mod" />
+    <File Path="src/monolith/go.sum" />
+    <File Path="src/monolith/main.go" />
+  </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/postman/">
+    <File Path="tests/postman/CinemaAbyss.postman_collection.json" />
+    <File Path="tests/postman/Dockerfile" />
+    <File Path="tests/postman/README.md" />
+    <File Path="tests/postman/docker.environment.json" />
+    <File Path="tests/postman/kubernetes.environment.json" />
+    <File Path="tests/postman/local.environment.json" />
+    <File Path="tests/postman/package.json" />
+    <File Path="tests/postman/run-tests.js" />
+    <File Path="tests/postman/run-tests.sh" />
   </Folder>
 </Solution>
