@@ -51,6 +51,15 @@
     <File Path="docs/c4/CinemaAbyss_Containers_ToBe.svg" />
     <File Path="docs/c4/cinemaabyss-containers-to-be.puml" />
   </Folder>
+  <Folder Name="/docs/screenshots/">
+    <File Path="docs/screenshots/task2-kafka-topics.png" />
+    <File Path="docs/screenshots/task2-postman-tests.png" />
+    <File Path="docs/screenshots/task3-ci.png" />
+    <File Path="docs/screenshots/task3-k8s-events-logs.png" />
+    <File Path="docs/screenshots/task3-k8s-movies.png" />
+    <File Path="docs/screenshots/task4-helm-install.png" />
+    <File Path="docs/screenshots/task4-helm-movies.png" />
+  </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/database/">
     <File Path="src/database/init.sql" />
