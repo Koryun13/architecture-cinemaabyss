@@ -204,8 +204,11 @@ Dockerfile, compose, манифесты Kubernetes, Helm-чарт, workflow и �
 Kafka в compose публикует два listener'а: `kafka:9092` для контейнеров и `localhost:9093` для
 сервисов, запущенных на хосте, — поэтому events-service из IDE работает с тем же брокером.
 
-Shell-конфигурации выполняют `bash deploy/*.sh` (на Windows — Git Bash). После установки
-kubectl, helm или minikube перезапустите Rider, чтобы он увидел обновлённый `PATH`.
+Shell-конфигурации выполняют `deploy/*.sh` через Git Bash по полному пути
+`C:\Program Files\Git\bin\bash.exe`: в системный `PATH` Git добавляет только `Git\cmd`, поэтому
+просто `bash` Rider не находит («Interpreter not found»). Если Git установлен в другую папку,
+поправьте поле *Interpreter path* в конфигурации. После установки kubectl, helm или minikube
+перезапустите Rider, чтобы он увидел обновлённый `PATH`.
 
 ## Kubernetes (minikube)
 
@@ -314,5 +317,6 @@ helm uninstall cinemaabyss -n cinemaabyss
 | events-service пишет `Subscribed topic not available` в первые секунды | Kafka ещё создаёт топики; consumer повторяет попытку сам |
 | Kafka в Kubernetes: `InconsistentClusterIdException` | остались данные прошлой установки: `bash deploy/k8s-delete.sh` (удаляет PVC вместе с namespace) и установите заново |
 | monolith/movies-service в Kubernetes перезапускаются 1–3 раза | ждут готовности PostgreSQL — это ожидаемо, затем Running |
+| Rider: «Interpreter not found» | конфигурации ждут Git Bash в `C:\Program Files\Git\bin\bash.exe`; если Git стоит в другом месте, укажите путь в *Interpreter path* |
 | shell-конфигурация Rider: `'helm' is not on PATH` | утилита установлена после запуска IDE — перезапустите Rider |
 | `ImagePullBackOff` | образы ещё не опубликованы CI или стали приватными — проверьте GitHub Packages |
