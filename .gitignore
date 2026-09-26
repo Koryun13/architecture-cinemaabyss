@@ -154,3 +154,7 @@ go.work
 
 # Postman tests reports
 tests/postman/reports/
+# .NET (proxy and events services)
+obj/
+.vs/
+*.user
